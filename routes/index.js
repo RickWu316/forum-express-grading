@@ -22,8 +22,8 @@ module.exports = (app, passport) => {
         res.redirect('/signin')
     }
 
-    app.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
-    app.get('/restaurants', authenticated, restController.getRestaurants)
+
+    // app.get('/restaurants', authenticated, restController.getRestaurants)
 
     // 連到 /admin 頁面就轉到 /admin/restaurants
     app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/restaurants'))
@@ -47,7 +47,7 @@ module.exports = (app, passport) => {
     app.delete('/admin/categories/:id', authenticatedAdmin, categoryController.deleteCategory)
 
     app.get('/restaurants/:id', authenticated, restController.getRestaurant)
-
+    app.get('/restaurants', authenticated, restController.getRestaurants)
 
     app.get('/signup', userController.signUpPage)
     app.post('/signup', userController.signUp)
@@ -55,6 +55,8 @@ module.exports = (app, passport) => {
     app.get('/signin', userController.signInPage)
     app.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
     app.get('/logout', userController.logout)
+
+    app.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
 }
 
 
