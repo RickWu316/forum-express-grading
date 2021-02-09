@@ -1,6 +1,5 @@
 const express = require('express')
 const handlebars = require('express-handlebars') // 引入 handlebars
-const Handlebars = require('handlebars')
 const bodyParser = require('body-parser')
 const flash = require('connect-flash')
 const session = require('express-session')
@@ -16,7 +15,10 @@ if (process.env.NODE_ENV !== 'production') {
 
 
 
-app.engine('handlebars', handlebars({ defaultLayout: 'main' }))// Handlebars 註冊樣板引擎
+app.engine('handlebars', handlebars({
+  defaultLayout: 'main',
+  helpers: require('./config/handlebars-helpers')
+}))
 app.set('view engine', 'handlebars') // 設定使用 Handlebars 做為樣板引擎
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -37,9 +39,6 @@ app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
 
-Handlebars.registerHelper('ifEquals', function (arg1, arg2, options) {
-  return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
-});
 require('./routes')(app, passport)
 
 module.exports = app
