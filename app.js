@@ -1,5 +1,5 @@
 const express = require('express')
-const handlebars = require('express-handlebars') // 引入 handlebars
+const handlebars = require('express-handlebars') // 引入 handlebarsgit
 const bodyParser = require('body-parser')
 const flash = require('connect-flash')
 const session = require('express-session')

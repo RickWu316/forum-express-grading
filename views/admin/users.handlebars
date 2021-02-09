@@ -1,13 +1,8 @@
 <h1>餐廳後台</h1>
 
 <div>
-    <a href="/admin/restaurants">
-        restaurants
-    </a>
-    <i>|</i>
-    <a href="/admin/Users">
-        Users
-    </a>
+    <a href="/admin/restaurants">restaurants</a>|
+    <a href='/admin/categories'>Categories</a>
 </div>
 
 <br />
@@ -31,7 +26,7 @@
             <td>{{this.email}}</td>
 
             {{!-- {{#if this.isAdmin }}使用者{{/if}} --}}
-            {{#ifEquals this.isAdmin 0}}
+            {{#ifCond this.isAdmin 0}}
             <td>使用者</td>
             <td>
                 <form action="/admin/users/{{this.id}}/toggleAdmin?_method=PUT" method="POST">
@@ -41,17 +36,17 @@
 
 
             </td>
-            {{/ifEquals}}
-            {{#ifEquals this.isAdmin 1}}
+            {{/ifCond}}
+            {{#ifCond this.isAdmin 1}}
             <td>管理者</td>
             <td>
-                <form action="/admin/Users/{{this.id}}/toggleAdmin?_method=PUT" method="POST">
+                <form action="/admin/users/{{this.id}}/toggleAdmin?_method=PUT" method="POST">
                     {{!-- <input type="hidden" name="id" value="{{this.id}}"> --}}
                     <button type="submit" class="btn btn-link"> set as User</button>
                 </form>
             </td>
 
-            {{/ifEquals}}
+            {{/ifCond}}
             </td>
 
             </td>
