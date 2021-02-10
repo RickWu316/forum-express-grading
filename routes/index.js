@@ -51,6 +51,7 @@ module.exports = (app, passport) => {
     app.get('/restaurants', authenticated, restController.getRestaurants)
 
     app.post('/comments', authenticated, commentController.postComment)
+    app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
 
     app.get('/signup', userController.signUpPage)
     app.post('/signup', userController.signUp)
