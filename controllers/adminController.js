@@ -154,18 +154,17 @@ const adminController = {
     },
     putUser: (req, res) => {
         User.findByPk(req.params.id)
-            .then((user) => {
+            .then(user => {
                 user.isAdmin = !user.isAdmin
-
-                user.update({
+                return user.update({
                     isAdmin: user.isAdmin
                 })
-                    .then((restaurant) => {
-                        req.flash('success_messages', 'User was successfully to update')
-                        res.redirect('/admin/users')
-                    })
             })
-    },
+            .then(() => {
+                req.flash('success_messages', 'User was successfully to update')
+                return res.redirect('/admin/users')
+            })
+    }
 
 }
 
