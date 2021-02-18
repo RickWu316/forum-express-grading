@@ -5,11 +5,27 @@
     <div class="col-auto">
         <h1>{{user.name}}</h1>
         <p>{{user.email}}</p>
+        <p>{{user.Comments.length}} 已評論餐廳</p>
+
         <button type="button" class="btn btn-primary">
             <a class="text-white" href="/users/{{user.id}}/edit">
                 Edit
             </a>
         </button>
+
+    </div>
+</div>
+<div class="card mt-2">
+    <div class="card-header">
+        <h5>已評論餐廳</h5>
+    </div>
+
+    <div class="card-body">
+        {{#each user.Comments}}
+        {{!-- <p>{{this.Restaurant.image}}</p> --}}
+        <img class="img-responsive center-block" src="{{this.Restaurant.image}}"
+            style="width: 50px;margin-bottom: 1px;">
+        {{/each}}
 
     </div>
 </div>

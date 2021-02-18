@@ -1,10 +1,13 @@
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
+const Comment = db.Comment
+const Restaurant = db.Restaurant
 const fs = require('fs')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const helpers = require('../_helpers')
+const restaurant = require('../models/restaurant')
 
 const userController = {
     signUpPage: (req, res) => {
@@ -52,7 +55,11 @@ const userController = {
     getUser: (req, res) => {
         const userId = helpers.getUser(req).id
         if (Number(req.params.id) === Number(userId)) {
-            return User.findByPk(userId)
+            return User.findByPk(userId, {
+                include: [
+                    { model: Comment, include: [Restaurant] }
+                ],
+            })
                 .then(user => {
                     return res.render('user', {
                         user: user.toJSON()
@@ -63,7 +70,6 @@ const userController = {
             res.redirect('/restaurants')
         }
     },
-
     editUser: (req, res) => {
         const userId = helpers.getUser(req).id
         if (Number(req.params.id) === Number(userId)) {
