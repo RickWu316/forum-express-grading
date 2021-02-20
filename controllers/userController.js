@@ -9,6 +9,7 @@ const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const helpers = require('../_helpers')
 // const restaurant = require('../models/restaurant')
 const Favorite = db.Favorite
+const Like = db.Like
 
 const userController = {
     signUpPage: (req, res) => {
@@ -102,6 +103,7 @@ const userController = {
                         req.flash('success_messages', 'user was successfully to update')
                         res.redirect(`/users/${req.params.id}`)
                     })
+                    .catch(error => console.error(error))
             })
 
         }
@@ -117,22 +119,27 @@ const userController = {
                     req.flash('success_messages', 'user was successfully to update')
                     res.redirect(`/users/${req.params.id}`)
                 })
+                .catch(error => console.error(error))
         }
 
     },
     addFavorite: (req, res) => {
+        console.log('test')
+        const userId = helpers.getUser(req).id
         return Favorite.create({
-            UserId: req.user.id,
+            UserId: userId,
             RestaurantId: req.params.restaurantId
         })
             .then((restaurant) => {
                 return res.redirect('back')
             })
+            .catch(error => console.error(error))
     },
     removeFavorite: (req, res) => {
+        const userId = helpers.getUser(req).id
         return Favorite.findOne({
             where: {
-                UserId: req.user.id,
+                UserId: userId,
                 RestaurantId: req.params.restaurantId
             }
         })
@@ -142,6 +149,35 @@ const userController = {
                         return res.redirect('back')
                     })
             })
+            .catch(error => console.error(error))
+    },
+    addLike: (req, res) => {
+        const userId = helpers.getUser(req).id
+        return Like.create({
+            UserId: userId,
+            RestaurantId: req.params.restaurantId
+        })
+            .then((restaurant) => {
+                return res.redirect('back')
+                // res.send(render('restaurants'))
+            })
+            .catch(error => console.error(error))
+    },
+    removeLike: (req, res) => {
+        const userId = helpers.getUser(req).id
+        return Like.findOne({
+            where: {
+                UserId: userId,
+                RestaurantId: req.params.restaurantId
+            }
+        })
+            .then((like) => {
+                like.destroy()
+                    .then((restaurant) => {
+                        return res.redirect('back')
+                    })
+            })
+            .catch(error => console.error(error))
     }
 }
 

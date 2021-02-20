@@ -17,7 +17,7 @@ let categoryController = {
             } else {
                 return res.render('admin/categories', { categories: categories })
             }
-        })
+        }).catch(error => console.error(error))
     },
     postCategory: (req, res) => {
         if (!req.body.name) {
@@ -30,6 +30,7 @@ let categoryController = {
                 .then((category) => {
                     res.redirect('/admin/categories')
                 })
+                .catch(error => console.error(error))
         }
     },
     putCategory: (req, res) => {
@@ -44,6 +45,7 @@ let categoryController = {
                             res.redirect('/admin/categories')
                         })
                 })
+                .catch(error => console.error(error))
         }
     },
     deleteCategory: (req, res) => {
@@ -53,6 +55,7 @@ let categoryController = {
                     .then((category) => {
                         res.redirect('/admin/categories')
                     })
+                    .catch(error => console.error(error))
             })
     }
 }
