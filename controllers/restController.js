@@ -4,9 +4,11 @@ const Category = db.Category
 const Comment = db.Comment
 const User = db.User
 const pageLimit = 10
+const helpers = require('../_helpers')
 
 const restController = {
     getRestaurants: (req, res) => {
+        const user = helpers.getUser(req)
         let offset = 0
         const whereQuery = {}
         let categoryId = ''
@@ -29,13 +31,13 @@ const restController = {
             const totalPage = Array.from({ length: pages }).map((item, index) => index + 1)
             const prev = page - 1 < 1 ? 1 : page - 1
             const next = page + 1 > pages ? pages : page + 1
-
             // clean up restaurant data
             const data = result.rows.map(r => ({
                 ...r.dataValues,
                 description: r.dataValues.description.substring(0, 50),
                 categoryName: r.dataValues.Category.name,
-                isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
+                isFavorited: user.FavoritedRestaurants.map(d => d.id).includes(r.id),
+                isLiked: user.LikedRestaurants.map(d => d.id).includes(r.id)
             }))
             Category.findAll({
                 raw: true,
@@ -51,24 +53,30 @@ const restController = {
                     next: next
                 })
             })
+                .catch(error => console.error(error))
         })
+            .catch(error => console.error(error))
     },
 
     getRestaurant: (req, res) => {
+        const user = helpers.getUser(req)
         return Restaurant.findByPk(req.params.id, {
             include: [
                 Category,
                 { model: User, as: 'FavoritedUsers' },
+                { model: User, as: 'LikedUsers' },
                 { model: Comment, include: [User] }
             ]
         }).then(async (restaurant) => {
-            const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id) // 找出收藏此餐廳的 user
+            const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(user.id) // 找出收藏此餐廳的 user
+            const isLiked = restaurant.LikedUsers.map(d => d.id).includes(user.id)
             await restaurant.increment('viewCounts', { by: 1 })
             return res.render('restaurant', {
                 restaurant: restaurant.toJSON(),
-                isFavorited: isFavorited
+                isFavorited: isFavorited,
+                isLiked: isLiked
             })
-        })
+        }).catch(error => console.error(error))
     },
     getFeeds: (req, res) => {
         return Promise.all([
@@ -91,7 +99,7 @@ const restController = {
                 restaurants: restaurants,
                 comments: comments
             })
-        })
+        }).catch(error => console.error(error))
     },
     getDashboard: (req, res) => {
         return Restaurant.findByPk(req.params.id, {
@@ -100,11 +108,10 @@ const restController = {
                 { model: Comment, include: [User] }
             ]
         }).then(restaurant => {
-            console.log(restaurant)
             return res.render('dashboard', {
                 restaurant: restaurant.toJSON(),
             })
-        })
+        }).catch(error => console.error(error))
     },
 }
 
