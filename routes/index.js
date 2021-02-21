@@ -54,14 +54,18 @@ module.exports = (app, passport) => {
     app.post('/comments', authenticated, commentController.postComment)
     app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
 
+    app.get('/users/top', authenticated, userController.getTopUser)
     app.get('/users/:id/edit', authenticated, userController.editUser)
     app.get('/users/:id', authenticated, userController.getUser)
     app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
+
 
     app.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
     app.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
     app.post('/like/:restaurantId', authenticated, userController.addLike)
     app.delete('/like/:restaurantId', authenticated, userController.removeLike)
+
+
 
     app.get('/signup', userController.signUpPage)
     app.post('/signup', userController.signUp)
