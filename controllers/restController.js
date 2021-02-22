@@ -113,6 +113,31 @@ const restController = {
             })
         }).catch(error => console.error(error))
     },
+
+    getTopRestaurant: (req, res) => {
+        // 撈出所有 User 與 followers 資料
+        return Restaurant.findAll({
+            include: [
+                { model: User, as: 'FavoritedUsers' },
+            ],
+            // limit: 10
+        }).then(restaurant => {
+            // 整理 users 資料
+            restaurant = restaurant.map(restaurant => ({
+                ...restaurant.dataValues,
+                description: restaurant.dataValues.description.substring(0, 50),
+                FavoritedCount: restaurant.FavoritedUsers.length,
+                isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(restaurant.id)
+            }))
+            // 依追蹤者人數排序清單
+            restaurant = restaurant.sort((a, b) => b.FavoritedCount - a.FavoritedCount)
+            restaurant = restaurant.slice(0, 10)
+            return res.render('topRestaurant', {
+                restaurant: restaurant
+            })
+        })
+    },
+
 }
 
 module.exports = restController
