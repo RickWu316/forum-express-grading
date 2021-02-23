@@ -55,19 +55,46 @@ const userController = {
         req.logout()
         res.redirect('/signin')
     },
-    getUser: (req, res) => {
+    getUser: async (req, res) => {
         const userId = helpers.getUser(req).id
+
         if (Number(req.params.id) === Number(userId)) {
-            return User.findByPk(userId, {
-                include: [
-                    { model: Comment, include: [Restaurant] }
-                ],
-            })
-                .then(user => {
-                    return res.render('user', {
-                        user: user.toJSON()
-                    })
+            try {
+                let data = await User.findByPk(userId, {
+                    include: [
+                        // {
+                        //     model: Comment,
+                        //     // include: [Restaurant], 
+                        //     attributes: [
+                        //         'RestaurantId',
+                        //         'UserId',
+                        //         'text'
+                        //     ], group: 'RestaurantId'
+                        // },
+                        { model: Restaurant, as: 'FavoritedRestaurants' },
+                        { model: User, as: 'Followers' },
+                        { model: User, as: 'Followings' },
+                    ],
                 })
+                let commentDistinct = await Comment.findAll({
+                    where: { UserId: userId }, attributes: [
+                        'RestaurantId',
+                        // 'UserId',
+                        // 'text'
+                    ], group: 'RestaurantId',
+                    include: [Restaurant],
+                    raw: true,
+                    nest: true
+                }
+                )
+                return res.render('user', {
+                    user: data.toJSON(),
+                    comment: commentDistinct
+                })
+            } catch (e) {
+                console.log(e)
+            }
+
         } else {
             req.flash('error_messages', '你無權限查看該使用者資料')
             res.redirect('/restaurants')

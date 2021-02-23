@@ -5,7 +5,10 @@
     <div class="col-auto">
         <h1>{{user.name}}</h1>
         <p>{{user.email}}</p>
-        <p>{{user.Comments.length}} 已評論餐廳</p>
+        <p>{{comment.length}} 已評論餐廳</p>
+        <p>{{user.FavoritedRestaurants.length}} 已收藏餐廳</p>
+        <p>{{user.Followings.length}} followings追蹤者</p>
+        <p>{{user.Followers.length}} followers追隨者</p>
 
         <button type="button" class="btn btn-primary">
             <a class="text-white" href="/users/{{user.id}}/edit">
@@ -15,17 +18,59 @@
 
     </div>
 </div>
-<div class="card mt-2">
-    <div class="card-header">
-        <h5>已評論餐廳</h5>
+<div class="row">
+    <div class="card mt-2 col-4">
+        <div class="card-header">
+            <h5>{{user.Followings.length}} followings(追蹤者)</h5>
+        </div>
+
+        <div class="card-body">
+            {{#each user.Followings}}
+            {{!-- <p>{{this.Restaurant.image}}</p> --}}
+            <img class="img-responsive center-block" src="{{this.avatar}}" style="width: 50px;margin-bottom: 1px;">
+            {{/each}}
+
+        </div>
     </div>
 
-    <div class="card-body">
-        {{#each user.Comments}}
-        {{!-- <p>{{this.Restaurant.image}}</p> --}}
-        <img class="img-responsive center-block" src="{{this.Restaurant.image}}"
-            style="width: 50px;margin-bottom: 1px;">
-        {{/each}}
+    <div class="card mt-2 col-8">
+        <div class="card-header">
+            <h5>{{comment.length}} 已評論餐廳</h5>
+        </div>
 
+        <div class="card-body">
+            {{#each comment}}
+            {{!-- <p>{{this.Restaurant.image}}</p> --}}
+            <img class="img-responsive center-block" src="{{this.Restaurant.image}}"
+                style="width: 50px;margin-bottom: 1px;">
+            {{/each}}
+
+        </div>
+    </div>
+    <div class="card mt-2 col-4">
+        <div class="card-header">
+            <h5>{{user.Followers.length}} followers(追隨者)</h5>
+        </div>
+
+        <div class="card-body">
+            {{#each user.Followers}}
+            {{!-- <p>{{this.Restaurant.image}}</p> --}}
+            <img class="img-responsive center-block" src="{{this.avatar}}" style="width: 50px;margin-bottom: 1px;">
+            {{/each}}
+
+        </div>
+    </div>
+    <div class="card mt-2 col-8">
+        <div class="card-header">
+            <h5>{{user.FavoritedRestaurants.length}} 收藏的餐廳</h5>
+        </div>
+
+        <div class="card-body">
+            {{#each user.FavoritedRestaurants}}
+            {{!-- <p>{{this.Restaurant.image}}</p> --}}
+            <img class="img-responsive center-block" src="{{this.image}}" style="width: 50px;margin-bottom: 1px;">
+            {{/each}}
+
+        </div>
     </div>
 </div>
