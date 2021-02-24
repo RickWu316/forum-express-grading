@@ -20,6 +20,11 @@ const adminController = {
                 return res.redirect('/admin/restaurants')
             }
         })
-    }
+    },
+    postRestaurant: (req, res) => {
+        adminService.postRestaurant(req, res, (data) => {
+            return res.json(data)
+        })
+    },
 }
 module.exports = adminController
