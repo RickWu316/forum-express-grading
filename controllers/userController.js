@@ -62,15 +62,6 @@ const userController = {
             try {
                 let data = await User.findByPk(userId, {
                     include: [
-                        // {
-                        //     model: Comment,
-                        //     // include: [Restaurant], 
-                        //     attributes: [
-                        //         'RestaurantId',
-                        //         'UserId',
-                        //         'text'
-                        //     ], group: 'RestaurantId'
-                        // },
                         { model: Restaurant, as: 'FavoritedRestaurants' },
                         { model: User, as: 'Followers' },
                         { model: User, as: 'Followings' },
