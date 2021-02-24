@@ -42,11 +42,20 @@ const adminService = {
             }
         }).catch(error => console.error(error))
     },
+    deleteRestaurant: (req, res, callback) => {
+        return Restaurant.findByPk(req.params.id)
+            .then(async (restaurant) => {
+                try {
+                    await restaurant.destroy()
+                    callback({ status: 'success', message: '' })
+                    console.log('test')
+                } catch (e) {
+                    console.log(e)
+                }
+            })
+    },
 
 }
 
-
-
 module.exports = adminService
-
 
