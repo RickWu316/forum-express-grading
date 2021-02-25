@@ -24,24 +24,6 @@ const adminService = {
             callback({ restaurant: restaurant.toJSON() })
         })
     },
-    getCategories: (req, res, callback) => {
-        return Category.findAll({
-            raw: true,
-            nest: true
-        }).then(categories => {
-            if (req.params.id) {
-                Category.findByPk(req.params.id)
-                    .then((category) => {
-                        return callback({
-                            categories: categories,
-                            category: category.toJSON()
-                        })
-                    })
-            } else {
-                return callback({ categories: categories })
-            }
-        }).catch(error => console.error(error))
-    },
     deleteRestaurant: (req, res, callback) => {
         return Restaurant.findByPk(req.params.id)
             .then(async (restaurant) => {
@@ -91,8 +73,7 @@ const adminService = {
     putRestaurant: (req, res, callback) => {
         if (!req.body.name) {
             return callback({ status: 'error', message: "name didn't exist" })
-            // req.flash('error_messages', "name didn't exist")
-            // return res.redirect('back')
+
         }
 
         const { file } = req
@@ -112,8 +93,6 @@ const adminService = {
                         })
                             .then((restaurant) => {
                                 callback({ status: 'success', message: 'restaurant was successfully to update' })
-                                // req.flash('success_messages', 'restaurant was successfully to update')
-                                // res.redirect('/admin/restaurants')
                             })
                     })
             })
@@ -138,8 +117,41 @@ const adminService = {
                 })
         }
     },
+    getCategories: (req, res, callback) => {
+        return Category.findAll({
+            raw: true,
+            nest: true
+        }).then(categories => {
+            if (req.params.id) {
+                Category.findByPk(req.params.id)
+                    .then((category) => {
+                        return callback({
+                            categories: categories,
+                            category: category.toJSON()
+                        })
+                    })
+            } else {
+                return callback({ categories: categories })
+            }
+        }).catch(error => console.error(error))
+    },
+
+    postCategory: (req, res, callback) => {
+        if (!req.body.name) {
+            return callback({ status: 'error', message: "name didn't exist" })
+        } else {
+            return Category.create({
+                name: req.body.name
+            })
+                .then((category) => {
+                    return callback({ status: 'success', message: 'category was successfully created' })
+                })
+                .catch(error => console.error(error))
+        }
+    },
 
 }
+
 
 module.exports = adminService
 
