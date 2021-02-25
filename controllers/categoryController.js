@@ -14,19 +14,22 @@ let categoryController = {
         })
     },
     putCategory: (req, res) => {
-        if (!req.body.name) {
-            req.flash('error_messages', 'name didn\'t exist')
-            return res.redirect('back')
-        } else {
-            return Category.findByPk(req.params.id)
-                .then((category) => {
-                    category.update(req.body)
-                        .then((category) => {
-                            res.redirect('/admin/categories')
-                        })
-                })
-                .catch(error => console.error(error))
-        }
+        adminService.putCategory(req, res, (data) => {
+            return res.redirect('/admin/categories')
+        })
+        // if (!req.body.name) {
+        //     req.flash('error_messages', 'name didn\'t exist')
+        //     return res.redirect('back')
+        // } else {
+        //     return Category.findByPk(req.params.id)
+        //         .then((category) => {
+        //             category.update(req.body)
+        //                 .then((category) => {
+        //                     res.redirect('/admin/categories')
+        //                 })
+        //         })
+        //         .catch(error => console.error(error))
+        // }
     },
     deleteCategory: (req, res) => {
         return Category.findByPk(req.params.id)
